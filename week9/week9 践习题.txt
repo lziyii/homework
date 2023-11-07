@@ -1,0 +1,44 @@
+--3.新建user表并插入数据
+CREATE TABLE user (
+    id INT PRIMARY KEY,
+    name VARCHAR(20),
+    sex VARCHAR(2),
+    age INT,
+    phone VARCHAR(20)
+);
+INSERT INTO user (id, name, sex, age, phone) VALUES
+(1, '张三', '男', 25, '18034598348'),
+(2, '李四', '女', 30, '10194839034'),
+(3, '王五', '女', 22, '11111111111');
+
+--4.查询年龄在20-30范围内的用户
+SELECT * FROM user WHERE age BETWEEN 20 AND 30;
+
+--5.删除名字包含“张”的用户
+DELETE FROM user WHERE name LIKE '%张%';
+
+--6.计算所有用户的平均年龄
+SELECT AVG(age) FROM user;
+
+--7.查询年龄在20-30范围内,名字包含“张”的用户,并按照年龄从大到小排序输出
+SELECT * FROM user WHERE age BETWEEN 20 AND 30 AND name LIKE '%张%' ORDER BY age DESC;
+
+--8.新建team表和score表
+CREATE TABLE team (
+    id INT PRIMARY KEY,
+    teamName VARCHAR(20)
+);
+CREATE TABLE score (
+    id INT PRIMARY KEY,
+    teamid INT,
+    userid INT,
+    score INT,
+    FOREIGN KEY (teamid) REFERENCES team(id),
+    FOREIGN KEY (userid) REFERENCES user(id)
+);
+
+--9.查询teamName为“ECNU”的队伍中,年龄小于20的用户们
+SELECT u.* FROM user u JOIN score s ON u.id = s.userid JOIN team t ON s.teamid = t.id WHERE t.teamName = 'ECNU' AND u.age < 20;
+
+--10.计算teamName为“ECNU”的总分
+SELECT COALESCE(SUM(score), 0) FROM score s JOIN team t ON s.teamid = t.id WHERE t.teamName = 'ECNU';
